@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Manasik — Panduan Haji & Umrah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ DESIGN TOKENS ============ */
+:root{
+  --ink-950:#0F1B2D;
+  --ink-900:#152538;
+  --ink-800:#1C3049;
+  --ink-700:#28405E;
+  --gold-500:#B8934A;
+  --gold-400:#CBA968;
+  --teal-700:#1D4E4E;
+  --teal-500:#2C6E6E;
+  --brick-600:#A6493D;
+  --sand-50:#FAF7F0;
+  --sand-100:#F3EDE0;
+  --sand-200:#E8DFC8;
+  --sand-300:#D9CBA8;
+  --ink-text:#1C2430;
+
+  --bg:var(--sand-50);
+  --bg-elevated:#FFFFFF;
+  --bg-card:var(--sand-100);
+  --text:var(--ink-text);
+  --text-muted:#6B6357;
+  --border:var(--sand-300);
+  --accent:var(--gold-500);
+  --accent-2:var(--teal-700);
+  --shadow: 0 4px 20px rgba(15,27,45,0.08);
+}
+[data-theme="dark"]{
+  --bg:var(--ink-950);
+  --bg-elevated:var(--ink-900);
+  --bg-card:var(--ink-800);
+  --text:#EDE6D6;
+  --text-muted:#9AA6B8;
+  --border:var(--ink-700);
+  --accent:var(--gold-400);
+  --accent-2:#4A9A94;
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Plus Jakarta Sans',sans-serif;
+  transition:background .25s ease,color .25s ease;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.display{
+  font-family:'Amiri',serif;
+  letter-spacing:.01em;
+}
+.mono{font-family:'JetBrains Mono',monospace;}
+
+/* ============ SIGNATURE: geometric star rosette ============ */
+.rosette{
+  display:inline-block;
+  width:1em;height:1em;
+  vertical-align:-0.15em;
+}
+.rosette path{stroke:currentColor;fill:none;stroke-width:1.4;}
+
+.divider-star{
+  display:flex;align-items:center;gap:14px;
+  margin:2.5rem 0;
+  color:var(--accent);
+  opacity:.85;
+}
+.divider-star::before,.divider-star::after{
+  content:"";flex:1;height:1px;
+  background:linear-gradient(90deg,transparent,var(--border));
+}
+.divider-star::after{background:linear-gradient(90deg,var(--border),transparent);}
+
+/* ============ TOP PROGRESS BAR ============ */
+#progressBar{
+  position:fixed;top:0;left:0;height:3px;
+  background:linear-gradient(90deg,var(--accent-2),var(--accent));
+  width:0%;z-index:999;transition:width .1s linear;
+}
+
+/* ============ HEADER ============ */
+header{
+  position:sticky;top:0;z-index:50;
+  background:color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  padding-top:3px;
+}
+.header-inner{
+  max-width:1200px;margin:0 auto;
+  display:flex;align-items:center;gap:14px;
+  padding:14px 20px;
+}
+.brand{
+  display:flex;align-items:center;gap:10px;
+  font-family:'Amiri',serif;font-weight:700;font-size:1.15rem;
+  color:var(--text);
+}
+.brand .rosette{width:1.4em;height:1.4em;color:var(--accent);}
+.brand small{
+  display:block;font-family:'Plus Jakarta Sans';font-weight:500;
+  font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--text-muted);
+}
+.header-actions{margin-left:auto;display:flex;gap:8px;align-items:center;}
+.icon-btn{
+  width:40px;height:40px;border-radius:10px;border:1px solid var(--border);
+  background:var(--bg-card);color:var(--text);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:transform .15s ease, border-color .15s ease;
+}
+.icon-btn:hover{border-color:var(--accent);transform:translateY(-1px);}
+.icon-btn svg{width:18px;height:18px;}
+
+/* search box */
+.search-wrap{position:relative;flex:1;max-width:340px;}
+.search-wrap input{
+  width:100%;padding:10px 14px 10px 38px;
+  border-radius:10px;border:1px solid var(--border);
+  background:var(--bg-card);color:var(--text);font-size:.88rem;
+  outline:none;font-family:'Plus Jakarta Sans';
+}
+.search-wrap input:focus{border-color:var(--accent);}
+.search-wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--text-muted);}
+#searchResults{
+  position:absolute;top:calc(100% + 8px);left:0;right:0;
+  background:var(--bg-elevated);border:1px solid var(--border);
+  border-radius:12px;box-shadow:var(--shadow);
+  max-height:320px;overflow:auto;display:none;z-index:60;
+}
+#searchResults.show{display:block;}
+#searchResults .res-item{
+  padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;font-size:.85rem;
+}
+#searchResults .res-item:last-child{border-bottom:none;}
+#searchResults .res-item:hover{background:var(--bg-card);}
+#searchResults .res-item b{color:var(--accent-2);}
+[data-theme="dark"] #searchResults .res-item b{color:var(--accent);}
+#searchResults .res-item .path{display:block;font-size:.68rem;color:var(--text-muted);margin-top:2px;}
+
+/* ============ LAYOUT ============ */
+.shell{
+  max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:270px 1fr;gap:0;
+}
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr;}
+}
+
+/* ============ SIDEBAR ============ */
+aside{
+  border-right:1px solid var(--border);
+  padding:24px 16px 60px;
+  position:sticky;top:73px;
+  height:calc(100vh - 73px);
+  overflow-y:auto;
+}
+@media (max-width:900px){
+  aside{
+    position:fixed;top:0;left:0;height:100vh;width:280px;
+    background:var(--bg-elevated);z-index:200;
+    transform:translateX(-100%);transition:transform .25s ease;
+    box-shadow:var(--shadow);padding-top:20px;
+  }
+  aside.open{transform:translateX(0);}
+}
+.nav-group-label{
+  font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--text-muted);font-weight:700;margin:18px 10px 8px;
+}
+.nav-group-label:first-child{margin-top:0;}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 10px;border-radius:9px;cursor:pointer;
+  font-size:.87rem;color:var(--text);
+  border-left:2px solid transparent;
+  transition:background .15s ease;
+}
+.nav-item:hover{background:var(--bg-card);}
+.nav-item.active{
+  background:var(--bg-card);
+  border-left:2px solid var(--accent);
+  color:var(--accent-2);font-weight:600;
+}
+[data-theme="dark"] .nav-item.active{color:var(--accent);}
+.nav-item .num{
+  font-family:'JetBrains Mono';font-size:.7rem;color:var(--text-muted);
+  width:1.4em;flex-shrink:0;
+}
+.nav-item .bookmark-dot{
+  margin-left:auto;width:6px;height:6px;border-radius:50%;
+  background:var(--accent);display:none;
+}
+.nav-item.bookmarked .bookmark-dot{display:block;}
+.nav-locked{opacity:.4;font-style:italic;font-size:.78rem;padding:8px 10px;}
+
+.mobile-nav-toggle{display:none;}
+@media (max-width:900px){
+  .mobile-nav-toggle{display:flex;}
+}
+#navScrim{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:150;
+}
+#navScrim.show{display:block;}
+
+/* ============ MAIN CONTENT ============ */
+main{padding:36px 40px 100px;min-width:0;}
+@media (max-width:640px){main{padding:24px 18px 90px;}}
+
+.chapter-eyebrow{
+  font-family:'JetBrains Mono';font-size:.72rem;letter-spacing:.1em;
+  color:var(--accent-2);text-transform:uppercase;margin-bottom:8px;
+}
+[data-theme="dark"] .chapter-eyebrow{color:var(--accent);}
+h1.chapter-title{font-size:clamp(1.6rem,3vw,2.4rem);margin:0 0 6px;line-height:1.15;}
+.chapter-sub{color:var(--text-muted);font-size:.95rem;margin-bottom:20px;}
+
+.chapter-tools{display:flex;gap:8px;margin-bottom:28px;flex-wrap:wrap;}
+.tool-btn{
+  display:flex;align-items:center;gap:6px;
+  padding:8px 13px;border-radius:999px;border:1px solid var(--border);
+  background:var(--bg-card);color:var(--text);font-size:.78rem;font-weight:600;
+  cursor:pointer;transition:.15s ease;
+}
+.tool-btn:hover{border-color:var(--accent);}
+.tool-btn.active{background:var(--accent);color:var(--ink-950);border-color:var(--accent);}
+.tool-btn svg{width:14px;height:14px;}
+
+.prose p{line-height:1.75;font-size:.98rem;margin:0 0 1rem;}
+.prose h2{font-size:1.35rem;margin:2rem 0 .8rem;display:flex;align-items:center;gap:10px;}
+.prose h2 .rosette{color:var(--accent);width:.85em;height:.85em;}
+.prose h3{font-size:1.08rem;margin:1.4rem 0 .6rem;color:var(--accent-2);}
+[data-theme="dark"] .prose h3{color:var(--accent);}
+.prose ul,.prose ol{padding-left:1.3rem;line-height:1.75;font-size:.96rem;}
+.prose li{margin-bottom:.4rem;}
+
+.card{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:14px;padding:20px 22px;margin:1.4rem 0;
+}
+.card-dalil{border-left:3px solid var(--brick-600);}
+.card-dalil .ref{font-family:'JetBrains Mono';font-size:.72rem;color:var(--brick-600);
+  text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;display:block;}
+.card-doa{border-left:3px solid var(--teal-500);}
+.arabic{
+  font-family:'Amiri',serif;font-size:1.5rem;line-height:2.1;text-align:right;
+  direction:rtl;margin-bottom:10px;color:var(--text);
+}
+.latin{font-style:italic;color:var(--accent-2);font-size:.92rem;margin-bottom:6px;}
+[data-theme="dark"] .latin{color:var(--accent);}
+.artinya{font-size:.9rem;color:var(--text-muted);}
+
+.checklist{list-style:none;padding:0;margin:1.2rem 0;}
+.checklist li{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:10px 0;border-bottom:1px solid var(--border);font-size:.93rem;
+}
+.checklist li:last-child{border-bottom:none;}
+.checklist input[type=checkbox]{
+  width:18px;height:18px;margin-top:2px;accent-color:var(--accent-2);flex-shrink:0;
+}
+
+.faq-item{border-bottom:1px solid var(--border);}
+.faq-q{
+  padding:14px 0;cursor:pointer;font-weight:600;font-size:.93rem;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .25s ease;font-size:.9rem;color:var(--text-muted);line-height:1.6;}
+.faq-item.open .faq-a{max-height:300px;padding-bottom:14px;}
+.faq-item.open .chev{transform:rotate(180deg);}
+.chev{transition:transform .2s ease;width:14px;height:14px;flex-shrink:0;}
+
+/* notes */
+textarea.notes-area{
+  width:100%;min-height:100px;border-radius:12px;border:1px solid var(--border);
+  background:var(--bg-elevated);color:var(--text);padding:12px 14px;
+  font-family:'Plus Jakarta Sans';font-size:.88rem;resize:vertical;outline:none;
+}
+textarea.notes-area:focus{border-color:var(--accent);}
+.save-hint{font-size:.72rem;color:var(--text-muted);margin-top:6px;}
+
+/* placeholder / locked chapter */
+.placeholder-box{
+  border:1.5px dashed var(--border);border-radius:16px;
+  padding:40px 24px;text-align:center;color:var(--text-muted);
+}
+.placeholder-box .rosette{width:2rem;height:2rem;color:var(--border);margin-bottom:10px;}
+
+footer{
+  text-align:center;padding:30px;color:var(--text-muted);font-size:.78rem;
+  border-top:1px solid var(--border);
+}
+
+/* PRINT — A6 */
+@media print{
+  header,aside,.chapter-tools,footer,#progressBar,#navScrim,.no-print{display:none !important;}
+  @page{size:105mm 148mm;margin:8mm;}
+  body{background:#fff;color:#000;font-size:9pt;}
+  .shell{display:block;}
+  main{padding:0;}
+  .arabic{font-size:13pt;}
+}
+
+/* scrollbar */
+::-webkit-scrollbar{width:8px;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+
+/* toast */
+#toast{
+  position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--ink-950);color:#fff;padding:11px 20px;border-radius:999px;
+  font-size:.82rem;opacity:0;pointer-events:none;transition:.25s ease;z-index:999;
+  box-shadow:var(--shadow);
+}
+[data-theme="dark"] #toast{background:var(--sand-50);color:var(--ink-950);}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body data-theme="light">
+
+<div id="progressBar"></div>
+<div id="navScrim" onclick="closeNav()"></div>
+
+<header>
+  <div class="header-inner">
+    <button class="icon-btn mobile-nav-toggle" onclick="openNav()" aria-label="Buka daftar isi">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="brand">
+      <svg class="rosette" viewBox="0 0 100 100"><g></g></svg>
+      <div>
+        Manasik
+        <small>Haji & Umrah</small>
+        <small style="letter-spacing:.02em;text-transform:none;font-weight:600;color:var(--accent-2);margin-top:1px;">Disusun oleh Bapak Budi UmrahBisa</small>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="searchInput" type="text" placeholder="Cari doa, bab, atau istilah...">
+      <div id="searchResults"></div>
+    </div>
+    <div class="header-actions">
+      <a class="icon-btn" href="https://wa.me/6281386108624" target="_blank" rel="noopener" aria-label="Konsultasi via WhatsApp" title="Konsultasi via WhatsApp: 0813-8610-8624" style="color:#25D366;border-color:#25D36655;">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.96L2.05 22l5.25-1.38a9.87 9.87 0 0 0 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm0 18.12h-.01a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.11.82.83-3.03-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.83 2.42a8.18 8.18 0 0 1 2.41 5.83c0 4.55-3.7 8.24-8.26 8.24zm4.52-6.17c-.25-.12-1.47-.72-1.7-.81-.23-.08-.39-.12-.56.13-.17.24-.64.81-.78.97-.15.17-.29.19-.53.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.39-1.72-.14-.24-.02-.38.11-.5.11-.11.25-.29.37-.43.12-.14.16-.24.24-.4.08-.17.04-.31-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.24-.86.85-.86 2.06 0 1.22.89 2.39 1.01 2.56.12.17 1.75 2.68 4.25 3.75.59.26 1.06.41 1.42.52.6.19 1.14.16 1.57.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.08.14-1.18-.06-.1-.23-.16-.48-.28z"/></svg>
+      </a>
+      <button class="icon-btn" id="themeToggle" onclick="toggleTheme()" aria-label="Ganti tema">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <button class="icon-btn" onclick="window.print()" aria-label="Cetak">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+  <aside id="sidebar"></aside>
+  <main id="mainContent"></main>
+</div>
+
+<footer>
+  Disusun sebagai kerangka WebBook Manasik — konten akan ditambahkan bertahap per bab.
+</footer>
+
+<div id="toast"></div>
+
+<script>
+/* ============================================================
+   DATA STRUKTUR BAB
+   Setiap bab: id, kelompok, judul, status ('ready' | 'locked'),
+   dan content (HTML string) untuk yang sudah ready.
+   Bab baru cukup ditambahkan ke array ini pada tahap berikutnya.
+   ============================================================ */
+const CHAPTERS = [
+  { id:'pengantar', group:'Pendahuluan', title:'Tentang Buku Ini', status:'ready',
+    eyebrow:'Kata Pengantar', sub:'Sepatah kata dari penyusun, tentang niat di balik hadirnya panduan ini.' },
+  { id:'niat-umrah', group:'Manasik Umrah', title:'Ihram & Niat Umrah', status:'ready',
+    eyebrow:'Bab 01 — Manasik Umrah', sub:'Titik awal ibadah umrah: memasuki ihram, mengucap niat, dan mentalbiyah.' },
+  { id:'tawaf', group:'Manasik Umrah', title:'Thawaf', status:'ready',
+    eyebrow:'Bab 02 — Manasik Umrah', sub:'Mengelilingi Ka\'bah tujuh putaran: rukun, sunnah, dan doa yang shahih dari Rasulullah ﷺ.' },
+  { id:'sai', group:'Manasik Umrah', title:"Sa'i", status:'ready',
+    eyebrow:"Bab 03 — Manasik Umrah", sub:"Berjalan tujuh kali antara Shafa dan Marwah, mengikuti jejak Siti Hajar, dengan tata cara yang diajarkan Rasulullah ﷺ." },
+  { id:'tahallul', group:'Manasik Umrah', title:'Tahallul', status:'ready',
+    eyebrow:'Bab 04 — Manasik Umrah', sub:'Mencukur atau memendekkan rambut sebagai penutup rangkaian umrah, membebaskan diri dari seluruh larangan ihram.' },
+  { id:'haji-wukuf', group:'Manasik Haji', title:'Wukuf di Arafah', status:'locked' },
+  { id:'haji-mabit-muzdalifah', group:'Manasik Haji', title:'Mabit di Muzdalifah', status:'locked' },
+  { id:'haji-jumrah', group:'Manasik Haji', title:'Melontar Jumrah', status:'locked' },
+  { id:'doa-doa', group:'Referensi', title:'Kumpulan Doa & Sunnah Harian', status:'ready',
+    eyebrow:'Referensi', sub:'Doa berangkat, masuk-keluar Masjidil Haram, shalat sunnah setelah thawaf, dan adab minum air zamzam — lengkap dengan dalil.' },
+  { id:'doa-safar', group:'Referensi', title:'Doa & Dzikir Perjalanan (Safar)', status:'ready',
+    eyebrow:'Referensi', sub:'Bekal dzikir sejak naik kendaraan, berpisah dengan keluarga, singgah di negeri asing, hingga dzikir pagi-petang.' },
+  { id:'faq', group:'Referensi', title:'Tanya Jawab', status:'locked' },
+];
+
+/* konten bab yang sudah 'ready' */
+const CONTENT = {
+'pengantar': `
+  <div class="prose">
+    <div class="card" style="border-left:3px solid var(--accent);background:var(--bg-elevated);">
+      <p style="margin:0;font-style:italic;color:var(--text-muted);">Bismillahirrahmanirrahim.</p>
+    </div>
+
+    <p>Buku ini lahir dari sebuah keinginan sederhana: agar setiap orang yang berangkat sebagai tamu Allah — dari kota kecil, desa, maupun pelosok mana pun — bisa memahami tuntunan umrah dan haji dengan benar, tanpa harus bingung mana yang rukun, mana yang sunnah, dan mana yang sekadar kebiasaan yang beredar di masyarakat tanpa dasar yang jelas.</p>
+
+    <p>Saya menyusun panduan ini dengan satu niat: <b>menjadikannya sedekah jariyah</b>. Bukan untuk diperjualbelikan, bukan untuk kepentingan pribadi, melainkan sebagai bekal yang semoga memudahkan langkah saudara-saudari sekalian dalam beribadah sesuai tuntunan Rasulullah ﷺ — sederhana dalam penyampaian, namun tetap berpegang teguh pada dalil yang shahih.</p>
+
+    <div class="divider-star"><svg class="rosette" viewBox="0 0 100 100"><g></g></svg></div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> Prinsip Penyusunan</h2>
+    <ul>
+      <li>Setiap tata cara dan doa yang dicantumkan disertai rujukan hadits — baik dari Shahih Bukhari, Shahih Muslim, maupun kitab hadits lain yang mu'tabar.</li>
+      <li>Bila suatu amalan berstatus lemah (dha'if) atau hanya berupa atsar sahabat (bukan sabda Nabi ﷺ), hal itu disebutkan secara jujur, bukan disamarkan seolah-olah sunnah yang kuat.</li>
+      <li>Perbedaan pendapat ulama pada beberapa masalah furu'iyyah disampaikan secara berimbang, tanpa bermaksud menyalahkan praktik mazhab atau kebiasaan tertentu yang juga memiliki dasar.</li>
+      <li>Bahasa disusun sesederhana mungkin, agar dapat dipahami oleh jamaah dari berbagai latar belakang pendidikan.</li>
+    </ul>
+
+    <div class="card card-dalil">
+      <span class="ref">HR. Muslim No. 1017</span>
+      <p style="margin:0;">Rasulullah ﷺ bersabda: "Barangsiapa menunjukkan kepada suatu kebaikan, maka ia mendapat pahala seperti pahala orang yang mengerjakannya."</p>
+    </div>
+
+    <p>Ayat suci Al-Qur'an dan hadits-hadits Nabi ﷺ yang dikutip dalam buku ini adalah hak Allah dan Rasul-Nya, disampaikan apa adanya untuk kemaslahatan bersama. Adapun kekurangan dalam penyusunan, penyampaian, atau kekeliruan yang tidak disengaja, sepenuhnya adalah keterbatasan penyusun sebagai manusia biasa — dan kami sangat terbuka menerima koreksi dari siapa pun yang lebih berilmu.</p>
+
+    <div class="divider-star"><svg class="rosette" viewBox="0 0 100 100"><g></g></svg></div>
+
+    <p style="text-align:center;">Semoga buku sederhana ini menjadi jariyah yang terus mengalirkan manfaat, memudahkan setiap langkah Bapak/Ibu jamaah menuju Baitullah, dan menjadi bagian dari ibadah yang mabrur.</p>
+
+    <p style="text-align:center;margin-top:1.6rem;">
+      <span class="mono" style="display:block;font-weight:600;">Bapak Budi</span>
+      <span style="color:var(--text-muted);font-size:.88rem;">UmrahBisa</span>
+    </p>
+  </div>
+`,
+'niat-umrah': `
+  <div class="chapter-tools no-print">
+    <button class="tool-btn" id="bookmarkBtn" onclick="toggleBookmark('niat-umrah')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      <span>Tandai Bab</span>
+    </button>
+    <button class="tool-btn" onclick="toggleNotesBox()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+      <span>Catatan Saya</span>
+    </button>
+  </div>
+
+  <div id="notesBox" style="display:none;margin-bottom:24px;">
+    <textarea class="notes-area" id="notesArea" placeholder="Tulis catatan pribadi untuk bab ini..."></textarea>
+    <div class="save-hint">Tersimpan otomatis di perangkat Anda.</div>
+  </div>
+
+  <div class="prose">
+    <p>Ihram adalah niat masuk ke dalam ibadah umrah atau haji, ditandai dengan berpakaian khusus dan larangan-larangan tertentu yang mulai berlaku sejak niat diucapkan. Ihram bukan sekadar mengenakan kain putih — inti dari ihram adalah <b>niat di dalam hati</b>, sedangkan pakaian dan ucapan talbiyah adalah penyerta yang menyempurnakan.</p>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> Miqat: Batas Memulai Ihram</h2>
+    <p>Miqat adalah batas tempat dan waktu yang telah ditentukan syariat untuk memulai ihram. Ada dua jenis miqat:</p>
+    <ul>
+      <li><b>Miqat zamani (waktu)</b> — untuk haji dimulai sejak bulan Syawal hingga terbit fajar hari Nahr (10 Dzulhijjah). Untuk umrah, ihram sah dilakukan kapan saja sepanjang tahun.</li>
+      <li><b>Miqat makani (tempat)</b> — titik geografis yang tidak boleh dilewati oleh jamaah yang hendak haji/umrah tanpa berihram terlebih dahulu, misalnya Bir Ali (Dzul Hulaifah) bagi jamaah dari arah Madinah.</li>
+    </ul>
+
+    <div class="card card-dalil">
+      <span class="ref">HR. Bukhari No. 1524, Muslim No. 1181</span>
+      <p style="margin:0;">Rasulullah ﷺ menetapkan miqat-miqat bagi penduduk Madinah, Syam, Najd, dan Yaman sebagai batas tempat memulai ihram bagi mereka dan bagi siapa saja yang melewatinya dengan maksud haji atau umrah.</p>
+    </div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> Tata Cara Berihram</h2>
+    <ol>
+      <li>Mandi sunnah ihram (boleh dilakukan sebelum tiba di miqat).</li>
+      <li>Memakai wewangian pada badan (bukan pada kain ihram) sebelum niat, jika mampu.</li>
+      <li>Mengenakan kain ihram: dua lembar kain putih tanpa jahitan bagi laki-laki; pakaian menutup aurat yang tidak menyerupai pakaian laki-laki bagi perempuan.</li>
+      <li>Shalat sunnah ihram dua rakaat bila memungkinkan.</li>
+      <li>Mengucapkan niat umrah di dalam hati, dilafalkan sebagai penguat.</li>
+      <li>Membaca talbiyah setelah niat, terus-menerus hingga memulai thawaf.</li>
+    </ol>
+
+    <div class="divider-star"><svg class="rosette" viewBox="0 0 100 100"><g></g></svg></div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> Lafal Niat Umrah</h2>
+    <div class="card card-doa">
+      <div class="arabic">لَبَّيْكَ اللَّهُمَّ عُمْرَةً</div>
+      <div class="latin">Labbaik Allahumma 'umratan</div>
+      <div class="artinya">Artinya: "Aku penuhi panggilan-Mu ya Allah, untuk berumrah."</div>
+    </div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> Bacaan Talbiyah</h2>
+    <div class="card card-doa">
+      <div class="arabic">لَبَّيْكَ اللَّهُمَّ لَبَّيْكَ، لَبَّيْكَ لَا شَرِيكَ لَكَ لَبَّيْكَ، إِنَّ الْحَمْدَ وَالنِّعْمَةَ لَكَ وَالْمُلْكَ، لَا شَرِيكَ لَكَ</div>
+      <div class="latin">Labbaikallahumma labbaik, labbaika laa syariika laka labbaik, innal hamda wan ni'mata laka wal mulk, laa syariika lak</div>
+      <div class="artinya">Artinya: "Aku penuhi panggilan-Mu ya Allah, aku penuhi panggilan-Mu. Aku penuhi panggilan-Mu, tiada sekutu bagi-Mu, aku penuhi panggilan-Mu. Sesungguhnya segala puji, nikmat, dan kerajaan adalah milik-Mu, tiada sekutu bagi-Mu."</div>
+      <p class="save-hint" style="margin-top:10px;">Disunnahkan diperbanyak dengan suara lantang bagi laki-laki, dan pelan bagi perempuan, sejak niat hingga memulai thawaf.</p>
+    </div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> Larangan Selama Ihram</h2>
+    <ul>
+      <li>Memotong rambut atau kuku.</li>
+      <li>Memakai wewangian setelah niat ihram.</li>
+      <li>Bagi laki-laki: mengenakan pakaian berjahit yang membentuk tubuh, menutup kepala secara langsung.</li>
+      <li>Berburu atau membunuh hewan buruan darat.</li>
+      <li>Akad nikah, meminang, atau berhubungan suami-istri.</li>
+      <li>Bertengkar, berkata kotor, atau berbuat fasik.</li>
+    </ul>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> Checklist Persiapan Ihram</h2>
+    <ul class="checklist" id="checklistIhram">
+      <li><input type="checkbox" data-key="chk-mandi"> Mandi sunnah ihram</li>
+      <li><input type="checkbox" data-key="chk-kain"> Kain ihram / pakaian sesuai ketentuan sudah dikenakan</li>
+      <li><input type="checkbox" data-key="chk-wangi"> Wewangian di badan sudah dipakai sebelum niat</li>
+      <li><input type="checkbox" data-key="chk-shalat"> Shalat sunnah ihram dua rakaat</li>
+      <li><input type="checkbox" data-key="chk-niat"> Niat umrah telah diucapkan</li>
+      <li><input type="checkbox" data-key="chk-talbiyah"> Mulai membaca talbiyah</li>
+    </ul>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> Tanya Jawab</h2>
+    <div id="faqIhram">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Apakah boleh berihram sebelum sampai miqat? <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="faq-a">Boleh, dan hukumnya sah — bahkan berihram dari rumah sekalipun diperbolehkan menurut jumhur ulama. Namun yang lebih utama adalah berihram tepat di miqat, mengikuti sunnah Rasulullah ﷺ.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Apa yang terjadi jika melewati miqat tanpa berihram? <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="faq-a">Jamaah wajib kembali ke miqat untuk berihram di sana. Jika tidak memungkinkan kembali, sebagian ulama berpendapat wajib membayar dam (denda) berupa penyembelihan seekor kambing.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Bolehkah mengganti kain ihram yang kotor? <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="faq-a">Boleh. Mengganti atau mencuci kain ihram tidak membatalkan ihram maupun niat, selama tidak mengenakan pakaian berjahit yang dilarang.</div>
+      </div>
+    </div>
+  </div>
+`,
+
+'tawaf': `
+  <div class="chapter-tools no-print">
+    <button class="tool-btn" id="bookmarkBtn" onclick="toggleBookmark('tawaf')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      <span>Tandai Bab</span>
+    </button>
+    <button class="tool-btn" onclick="toggleNotesBox()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+      <span>Catatan Saya</span>
+    </button>
+  </div>
+
+  <div id="notesBox" style="display:none;margin-bottom:24px;">
+    <textarea class="notes-area" id="notesArea" placeholder="Tulis catatan pribadi untuk bab ini..."></textarea>
+    <div class="save-hint">Tersimpan otomatis di perangkat Anda.</div>
+  </div>
+
+  <div class="prose">
+    <p>Thawaf adalah mengelilingi Ka'bah sebanyak tujuh putaran, dimulai dan diakhiri di titik Hajar Aswad, dengan posisi Ka'bah selalu berada di sebelah kiri tubuh. Thawaf umrah termasuk rukun — tanpa thawaf, umrah tidak sah dan tidak dapat digantikan dengan dam (denda).</p>
+
+    <div class="card card-dalil">
+      <span class="ref">HR. Tirmidzi, dihasankan dari Ibnu Abbas</span>
+      <p style="margin:0;">Thawaf mengelilingi Baitullah kedudukannya seperti shalat, hanya saja padanya diperbolehkan berbicara. Maka siapa yang berbicara di dalamnya, janganlah berbicara kecuali dengan perkataan yang baik.</p>
+    </div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> Syarat Sah Thawaf</h2>
+    <ul>
+      <li>Suci dari hadats besar dan kecil (berwudhu).</li>
+      <li>Menutup aurat.</li>
+      <li>Ka'bah selalu berada di sebelah kiri jamaah sepanjang putaran.</li>
+      <li>Dimulai dan diakhiri tepat sejajar Hajar Aswad.</li>
+      <li>Dilakukan di dalam Masjidil Haram, di luar area Ka'bah dan Hijr Ismail (thawaf tidak boleh memotong lewat dalam Hijr Ismail).</li>
+      <li>Genap tujuh putaran, berurutan tanpa terputus lama.</li>
+    </ul>
+
+    <div class="divider-star"><svg class="rosette" viewBox="0 0 100 100"><g></g></svg></div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> Istilam: Mengusap & Mencium Hajar Aswad</h2>
+    <p>Disunnahkan mengusap atau mencium Hajar Aswad setiap memulai putaran, jika keadaan memungkinkan tanpa harus mendorong atau menyakiti jamaah lain. Jika tidak memungkinkan mendekat, cukup memberi isyarat ke arahnya sambil bertakbir.</p>
+
+    <div class="card card-dalil">
+      <span class="ref">HR. Bukhari No. 1597</span>
+      <p style="margin:0;">Dari 'Abis bin Rabi'ah, ia melihat Umar bin Khattab radhiyallahu 'anhu mencium Hajar Aswad seraya berkata: "Sungguh aku tahu engkau hanyalah batu, tidak dapat memberi manfaat maupun mudarat. Seandainya aku tidak melihat Rasulullah ﷺ menciummu, niscaya aku tidak akan menciummu."</p>
+    </div>
+
+    <div class="card card-dalil">
+      <span class="ref">HR. Bukhari — dari Ibnu Abbas</span>
+      <p style="margin:0;">Nabi ﷺ thawaf di atas untanya; setiap kali sampai di sudut Hajar Aswad, beliau memberi isyarat ke arahnya dengan sesuatu yang ada di tangannya sambil bertakbir, tanpa harus menyentuhnya.</p>
+    </div>
+
+    <h3>Bacaan saat istilam</h3>
+    <div class="card card-doa">
+      <div class="arabic">بِسْمِ اللَّهِ وَاللَّهُ أَكْبَرُ</div>
+      <div class="latin">Bismillahi wallahu akbar</div>
+      <div class="artinya">Artinya: "Dengan nama Allah, dan Allah Maha Besar." Diriwayatkan shahih dari Ibnu Umar radhiyallahu 'anhuma (HR. Al-Baihaqi). Jika hanya memberi isyarat dari jauh, cukup mengucapkan "Allahu Akbar".</div>
+    </div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> Mengusap Rukun Yamani</h2>
+    <p>Rukun Yamani (sudut sebelum Hajar Aswad) disunnahkan diusap dengan tangan, tanpa dicium dan tanpa bertakbir. Selain dua rukun ini (Hajar Aswad dan Rukun Yamani), tidak ada sudut Ka'bah lain yang disunnahkan untuk disentuh.</p>
+    <div class="card card-dalil">
+      <span class="ref">Muttafaq 'alaih — HR. Bukhari & Muslim, dari Ibnu Umar</span>
+      <p style="margin:0;">"Aku tidak pernah melihat Rasulullah ﷺ mengusap bagian mana pun dari Ka'bah kecuali dua rukun Yamani (Hajar Aswad dan Rukun Yamani)."</p>
+    </div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> Raml: Jalan Cepat di Tiga Putaran Pertama</h2>
+    <p>Khusus bagi laki-laki dan khusus untuk thawaf qudum (thawaf pertama saat baru tiba) atau thawaf umrah, disunnahkan raml — berjalan cepat dengan langkah pendek sambil sedikit menegakkan bahu — pada tiga putaran pertama. Empat putaran berikutnya berjalan biasa.</p>
+    <div class="card card-dalil">
+      <span class="ref">Muttafaq 'alaih (HR. Bukhari No. 1602, Muslim No. 1261) — dari Ibnu Abbas</span>
+      <p style="margin:0;">Nabi ﷺ memerintahkan para sahabat untuk raml pada tiga putaran dan berjalan biasa pada empat putaran, di antara dua rukun (Rukun Yamani dan Hajar Aswad).</p>
+    </div>
+    <p class="save-hint">Raml tidak disunnahkan bagi perempuan, dan tidak berlaku lagi jika masjid dalam keadaan sangat padat sehingga berjalan cepat dapat menyakiti jamaah lain.</p>
+
+    <div class="divider-star"><svg class="rosette" viewBox="0 0 100 100"><g></g></svg></div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> Doa Antara Rukun Yamani dan Hajar Aswad</h2>
+    <p>Tidak ada dzikir atau doa khusus yang wajib dibaca pada tiap putaran thawaf — jamaah bebas berdzikir dan berdoa apa saja, dalam bahasa apa pun. Namun satu doa yang secara khusus diajarkan Rasulullah ﷺ dan beliau baca berulang setiap kali berada di antara Rukun Yamani dan Hajar Aswad adalah:</p>
+    <div class="card card-doa">
+      <div class="arabic">رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ</div>
+      <div class="latin">Rabbanaa aatinaa fid-dunyaa hasanah, wa fil-aakhirati hasanah, wa qinaa 'adzaaban-naar</div>
+      <div class="artinya">Artinya: "Ya Rabb kami, berilah kami kebaikan di dunia dan kebaikan di akhirat, dan peliharalah kami dari azab neraka."</div>
+      <p class="save-hint" style="margin-top:10px;">HR. Abu Dawud No. 1892, HR. Ahmad 3/411, dishahihkan (hasan) oleh Syaikh Al-Albani dalam Shahih Sunan Abi Dawud. Dibaca berulang setiap melewati ruas antara dua rukun ini, di tiap-tiap putaran.</p>
+    </div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> Setelah Tujuh Putaran Selesai</h2>
+    <ol>
+      <li>Menutup kembali bahu kanan yang sebelumnya dibuka untuk idhthiba' (khusus laki-laki, jika sebelumnya mengenakan idhthiba' saat raml).</li>
+      <li>Bila memungkinkan, shalat sunnah dua rakaat di belakang Maqam Ibrahim, atau di tempat lain di Masjidil Haram jika padat.</li>
+      <li>Minum air zamzam.</li>
+      <li>Kembali istilam Hajar Aswad jika memungkinkan, sebagai penutup, sebelum melanjutkan ke Sa'i.</li>
+    </ol>
+
+    <div class="card card-dalil">
+      <span class="ref">QS. Al-Baqarah: 125 & HR. Muslim No. 1218</span>
+      <p style="margin:0;">Allah berfirman: "Dan jadikanlah sebagian Maqam Ibrahim sebagai tempat shalat." Dalam hadits riwayat Jabir bin Abdillah tentang tata cara haji Nabi ﷺ, beliau membaca ayat ini lalu shalat dua rakaat di belakang Maqam Ibrahim setelah menyelesaikan thawaf.</p>
+    </div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> Checklist Thawaf</h2>
+    <ul class="checklist" id="checklistTawaf">
+      <li><input type="checkbox" data-key="chk-wudhu"> Sudah berwudhu / dalam keadaan suci</li>
+      <li><input type="checkbox" data-key="chk-mulai"> Memulai putaran sejajar Hajar Aswad</li>
+      <li><input type="checkbox" data-key="chk-istilam"> Istilam / isyarat ke Hajar Aswad di setiap putaran</li>
+      <li><input type="checkbox" data-key="chk-raml"> Raml pada 3 putaran pertama (laki-laki)</li>
+      <li><input type="checkbox" data-key="chk-7x"> Tujuh putaran selesai dihitung dengan benar</li>
+      <li><input type="checkbox" data-key="chk-shalat"> Shalat sunnah 2 rakaat di dekat Maqam Ibrahim</li>
+      <li><input type="checkbox" data-key="chk-zamzam"> Minum air zamzam</li>
+    </ul>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> Tanya Jawab</h2>
+    <div id="faqTawaf">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Bagaimana jika ragu jumlah putaran? <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="faq-a">Ambil bilangan yang paling meyakinkan (biasanya yang lebih sedikit), lalu genapkan sesuai kaidah keraguan dalam ibadah — kerjakan tambahan putaran agar yakin sudah tujuh, karena thawaf termasuk rukun yang tidak boleh diperkirakan secara longgar.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Apakah wajib mencium Hajar Aswad? <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="faq-a">Tidak wajib, hukumnya sunnah. Jika sesak dan berdesakan, cukup memberi isyarat dari jauh sambil bertakbir. Memaksakan diri hingga menyakiti jamaah lain justru bertentangan dengan larangan menyakiti sesama muslim.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Apakah boleh thawaf dalam keadaan tidak berwudhu? <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="faq-a">Jumhur ulama mensyaratkan suci dari hadats sebagaimana shalat, berdasarkan hadits "thawaf itu seperti shalat". Jika batal wudhu di tengah thawaf, disarankan berwudhu ulang lalu melanjutkan atau mengulang putaran yang terputus, sesuai bimbingan pembimbing di lapangan.</div>
+      </div>
+    </div>
+  </div>
+`,
+
+'sai': `
+  <div class="chapter-tools no-print">
+    <button class="tool-btn" id="bookmarkBtn" onclick="toggleBookmark('sai')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      <span>Tandai Bab</span>
+    </button>
+    <button class="tool-btn" onclick="toggleNotesBox()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+      <span>Catatan Saya</span>
+    </button>
+  </div>
+
+  <div id="notesBox" style="display:none;margin-bottom:24px;">
+    <textarea class="notes-area" id="notesArea" placeholder="Tulis catatan pribadi untuk bab ini..."></textarea>
+    <div class="save-hint">Tersimpan otomatis di perangkat Anda.</div>
+  </div>
+
+  <div class="prose">
+    <p>Sa'i adalah berjalan dari bukit Shafa menuju bukit Marwah dan sebaliknya, sebanyak tujuh kali, sebagai rukun umrah yang mengenang perjuangan Siti Hajar mencari air untuk putranya, Ismail 'alaihis salam. Sa'i tidak sah menggantikan thawaf, dan sebaliknya — keduanya rukun yang berdiri sendiri dan wajib dikerjakan berurutan setelah thawaf selesai.</p>
+
+    <div class="card card-dalil">
+      <span class="ref">QS. Al-Baqarah: 158</span>
+      <p style="margin:0;">"Sesungguhnya Shafa dan Marwah adalah sebagian dari syiar-syiar Allah. Maka barangsiapa yang beribadah haji ke Baitullah atau berumrah, tidak ada dosa baginya mengerjakan sa'i antara keduanya. Dan barangsiapa mengerjakan suatu kebajikan dengan kerelaan hati, maka sesungguhnya Allah Maha Mensyukuri kebaikan lagi Maha Mengetahui."</p>
+    </div>
+
+    <div class="card card-dalil">
+      <span class="ref">HR. Bukhari & Muslim — dari 'Aisyah radhiyallahu 'anha</span>
+      <p style="margin:0;">"Allah tidak akan menyempurnakan haji atau umrah seseorang yang tidak melakukan sa'i antara Shafa dan Marwah."</p>
+    </div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> Syarat Sa'i</h2>
+    <ul>
+      <li>Dikerjakan setelah thawaf (thawaf umrah untuk umrah, thawaf ifadhah untuk haji).</li>
+      <li>Dimulai dari Shafa, diakhiri di Marwah.</li>
+      <li>Genap tujuh kali perjalanan — Shafa ke Marwah dihitung satu kali, Marwah ke Shafa dihitung satu kali berikutnya.</li>
+      <li>Dilakukan di area mas'a (lintasan Shafa–Marwah), dengan urutan yang tertib, tidak boleh diloncat-loncat.</li>
+    </ul>
+    <p class="save-hint">Berbeda dengan thawaf, kesucian dari hadats bukan syarat sah sa'i — hanya dianjurkan. Dalilnya dijelaskan pada bagian Tanya Jawab di akhir bab ini.</p>
+
+    <div class="divider-star"><svg class="rosette" viewBox="0 0 100 100"><g></g></svg></div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> Memulai dari Shafa</h2>
+    <div class="card card-dalil">
+      <span class="ref">HR. Muslim No. 1218 — hadits panjang Jabir bin Abdillah tentang haji Nabi ﷺ</span>
+      <p style="margin:0;">Ketika mendekati Shafa, Nabi ﷺ membaca ayat "Innash Shafa wal Marwata min sya'airillah", lalu bersabda: "Aku memulai dengan apa yang Allah mulai (yaitu Shafa)."</p>
+    </div>
+
+    <h3>Bacaan mendekati Shafa</h3>
+    <div class="card card-doa">
+      <div class="arabic">إِنَّ الصَّفَا وَالْمَرْوَةَ مِنْ شَعَائِرِ اللَّهِ</div>
+      <div class="latin">Innash-Shafa wal-Marwata min sya'a-irillah</div>
+      <div class="artinya">Artinya: "Sesungguhnya Shafa dan Marwah adalah sebagian dari syiar-syiar Allah." Dibaca satu kali saat mendekati Shafa untuk memulai sa'i.</div>
+    </div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> Dzikir dan Doa di Atas Shafa & Marwah</h2>
+    <p>Setelah naik ke atas Shafa (atau area terdekat yang memungkinkan) dan menghadap ke arah Ka'bah, disunnahkan bertakbir tiga kali lalu membaca dzikir berikut, diikuti doa sesuai kebutuhan masing-masing. Rangkaian ini disunnahkan diulang tiga kali dengan doa bebas di antaranya, dan dilakukan kembali dengan cara yang sama setiap tiba di Marwah.</p>
+    <div class="card card-doa">
+      <div class="arabic">اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ، أَنْجَزَ وَعْدَهُ، وَنَصَرَ عَبْدَهُ، وَهَزَمَ الْأَحْزَابَ وَحْدَهُ</div>
+      <div class="latin">Allahu akbar, Allahu akbar, Allahu akbar. Laa ilaaha illallaahu wahdahu laa syariika lah, lahul mulku wa lahul hamdu wa huwa 'ala kulli syai'in qadiir. Laa ilaaha illallaahu wahdah, anjaza wa'dah, wa nashara 'abdah, wa hazamal ahzaaba wahdah</div>
+      <div class="artinya">Artinya: "Allah Maha Besar (3x), tidak ada sesembahan yang berhak disembah kecuali Allah semata, tiada sekutu bagi-Nya, milik-Nya segala kerajaan dan pujian, dan Dia Maha Kuasa atas segala sesuatu. Tidak ada sesembahan yang berhak disembah kecuali Allah semata, Dia menepati janji-Nya, menolong hamba-Nya, dan mengalahkan pasukan sekutu sendirian."</div>
+      <p class="save-hint" style="margin-top:10px;">HR. Muslim No. 1218, dari hadits panjang Jabir bin Abdillah tentang tata cara haji Nabi ﷺ.</p>
+    </div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> Harwalah: Lari Kecil di Dasar Lembah</h2>
+    <p>Khusus bagi laki-laki, disunnahkan berjalan cepat (harwalah/lari-lari kecil) ketika melintasi area yang ditandai dengan pilar/lampu hijau di titik terendah lintasan mas'a. Sebelum dan sesudah area tersebut, berjalan seperti biasa. Perempuan berjalan biasa di sepanjang lintasan, tanpa harwalah.</p>
+    <div class="card card-dalil">
+      <span class="ref">HR. Muslim — dari Ibnu Umar radhiyallahu 'anhuma</span>
+      <p style="margin:0;">Nabi ﷺ berjalan biasa di sebagian lintasan, dan berlari kecil ketika sampai di dasar lembah (antara dua tanda), pada saat sa'i antara Shafa dan Marwah.</p>
+    </div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> Sepanjang Perjalanan</h2>
+    <p>Tidak ada bacaan wajib khusus di sepanjang lintasan antara dua bukit — jamaah dianjurkan memperbanyak dzikir, istighfar, shalawat, dan doa sesuai kebutuhan masing-masing, dalam bahasa apa pun yang dipahami, sebagaimana kaidah umum dalam thawaf.</p>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> Checklist Sa'i</h2>
+    <ul class="checklist" id="checklistSai">
+      <li><input type="checkbox" data-key="chk-thawaf-selesai"> Thawaf sudah selesai sempurna sebelum memulai sa'i</li>
+      <li><input type="checkbox" data-key="chk-mulai-shafa"> Memulai perjalanan dari Shafa</li>
+      <li><input type="checkbox" data-key="chk-dzikir-shafa"> Membaca dzikir & doa di atas Shafa menghadap kiblat</li>
+      <li><input type="checkbox" data-key="chk-harwalah"> Harwalah di area pilar hijau (laki-laki)</li>
+      <li><input type="checkbox" data-key="chk-dzikir-marwah"> Membaca dzikir & doa yang sama di Marwah</li>
+      <li><input type="checkbox" data-key="chk-7x-sai"> Tujuh kali perjalanan selesai, berakhir di Marwah</li>
+    </ul>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> Tanya Jawab</h2>
+    <div id="faqSai">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Apakah wajib berwudhu untuk sa'i? <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="faq-a">Tidak wajib, berbeda dengan thawaf. Dalilnya, Nabi ﷺ bersabda kepada Aisyah radhiyallahu 'anha yang saat itu sedang haid: "Lakukan apa yang dilakukan orang yang berhaji, hanya saja jangan thawaf di Ka'bah sampai engkau suci." (Muttafaq 'alaih) — menunjukkan bahwa sa'i termasuk amalan yang tetap boleh dikerjakan meski dalam keadaan tidak suci, meski tetap dianjurkan berwudhu jika memungkinkan.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Bolehkah sa'i menggunakan kursi roda karena tidak mampu berjalan? <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="faq-a">Boleh, bagi jamaah yang memiliki uzur seperti sakit, lanjut usia, atau kelelahan berat. Yang menjadi rukun adalah menempuh lintasan Shafa-Marwah sebanyak tujuh kali, bukan cara menempuhnya.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Bolehkah sa'i diselingi istirahat atau shalat wajib di tengah jalan? <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="faq-a">Boleh. Jika di tengah sa'i masuk waktu shalat wajib, jamaah berhenti untuk shalat berjamaah, lalu melanjutkan sa'i dari titik terakhir tanpa perlu mengulang dari awal.</div>
+      </div>
+    </div>
+  </div>
+`,
+
+'tahallul': `
+  <div class="chapter-tools no-print">
+    <button class="tool-btn" id="bookmarkBtn" onclick="toggleBookmark('tahallul')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      <span>Tandai Bab</span>
+    </button>
+    <button class="tool-btn" onclick="toggleNotesBox()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+      <span>Catatan Saya</span>
+    </button>
+  </div>
+
+  <div id="notesBox" style="display:none;margin-bottom:24px;">
+    <textarea class="notes-area" id="notesArea" placeholder="Tulis catatan pribadi untuk bab ini..."></textarea>
+    <div class="save-hint">Tersimpan otomatis di perangkat Anda.</div>
+  </div>
+
+  <div class="prose">
+    <p>Tahallul adalah mencukur habis (halq) atau memendekkan (taqsir) rambut kepala setelah sa'i selesai, sebagai penutup rukun umrah. Dengan tahallul, seluruh larangan ihram gugur — jamaah kembali boleh memakai pakaian berjahit, wewangian, memotong kuku, dan hal-hal lain yang sebelumnya dilarang sejak niat ihram.</p>
+
+    <div class="card card-dalil">
+      <span class="ref">QS. Al-Fath: 27</span>
+      <p style="margin:0;">Allah berfirman tentang orang-orang yang memasuki Masjidil Haram dengan aman: "...dengan mencukur rambut kepala dan mengguntingnya, sedang kamu tidak merasa takut." Ayat ini menjadi dasar bahwa mencukur atau memendekkan rambut (halq/taqsir) adalah bagian dari manasik, bukan sekadar kebiasaan.</p>
+    </div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> Halq atau Taqsir: Mana yang Lebih Utama?</h2>
+    <p>Bagi jamaah laki-laki, ada dua pilihan yang sama-sama sah: <b>halq</b> (mencukur habis seluruh rambut kepala) atau <b>taqsir</b> (memendekkan rambut secara merata di seluruh bagian kepala, bukan hanya sebagian). Halq lebih utama daripada taqsir.</p>
+    <div class="card card-dalil">
+      <span class="ref">Muttafaq 'alaih (HR. Bukhari No. 1727, Muslim No. 1301) — dari Ibnu Umar</span>
+      <p style="margin:0;">Rasulullah ﷺ berdoa: "Ya Allah, rahmatilah orang-orang yang mencukur rambutnya." Para sahabat bertanya, "Dan yang memendekkan rambutnya, wahai Rasulullah?" Beliau mengulang doa rahmat untuk yang mencukur hingga tiga kali, dan baru pada kali ketiga beliau menambahkan, "Dan yang memendekkan rambutnya."</p>
+    </div>
+    <p class="save-hint">Doa Nabi ﷺ diulang tiga kali untuk yang mencukur habis dan hanya sekali untuk yang memendekkan — inilah dasar mengapa para ulama menilai halq lebih utama, meski taqsir tetap sah sepenuhnya.</p>
+
+    <div class="divider-star"><svg class="rosette" viewBox="0 0 100 100"><g></g></svg></div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> Ketentuan Khusus untuk Jamaah Perempuan</h2>
+    <p>Perempuan tidak disyariatkan mencukur habis (halq) rambutnya. Tahallul bagi perempuan hanya dengan taqsir — memotong ujung rambut kira-kira sepanjang satu ruas jari, dari rambut yang telah dikumpulkan menjadi satu.</p>
+    <div class="card card-dalil">
+      <span class="ref">HR. Abu Dawud No. 1985</span>
+      <p style="margin:0;">"Tidak ada kewajiban mencukur habis bagi perempuan, yang disyariatkan bagi mereka hanyalah memendekkan rambut (taqsir)."</p>
+    </div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> Tata Cara Mencukur</h2>
+    <ol>
+      <li>Dilakukan setelah sa'i selesai sempurna tujuh kali.</li>
+      <li>Disunnahkan mendahulukan sisi kanan kepala, baru kemudian sisi kiri.</li>
+      <li>Bagi laki-laki yang memilih taqsir: rambut dipendekkan merata di seluruh bagian kepala, bukan hanya sebagian kecil.</li>
+      <li>Bagi perempuan: cukup memotong ujung rambut yang telah dikumpulkan, seukuran satu ruas jari.</li>
+      <li>Setelah selesai, seluruh larangan ihram gugur dan rangkaian umrah selesai.</li>
+    </ol>
+    <div class="card card-dalil">
+      <span class="ref">HR. Muslim — dari Anas bin Malik radhiyallahu 'anhu</span>
+      <p style="margin:0;">Anas menceritakan bahwa Rasulullah ﷺ menyerahkan sisi kepala sebelah kanan terlebih dahulu kepada tukang cukur, kemudian sisi kiri, lalu membagikan rambut tersebut kepada para sahabat.</p>
+    </div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> Doa untuk yang Bertahallul</h2>
+    <p>Doa berikut adalah doa Nabi ﷺ yang ditujukan kepada jamaah yang bertahallul — boleh dibaca untuk diri sendiri maupun mendoakan orang lain yang sedang mencukur rambutnya (misalnya suami mendoakan istri, atau sebaliknya):</p>
+    <div class="card card-doa">
+      <div class="arabic">اللَّهُمَّ اغْفِرْ لِلْمُحَلِّقِينَ</div>
+      <div class="latin">Allahummaghfir lil-muhalliqiin</div>
+      <div class="artinya">Artinya: "Ya Allah, ampunilah orang-orang yang mencukur rambutnya." (Bagian dari doa yang sama pada HR. Bukhari No. 1727 & Muslim No. 1301). Bagi yang taqsir, boleh dibaca dengan mengganti lafal menjadi "wal muqashshiriin" (dan orang-orang yang memendekkan rambutnya).</div>
+    </div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> Checklist Tahallul</h2>
+    <ul class="checklist" id="checklistTahallul">
+      <li><input type="checkbox" data-key="chk-sai-selesai"> Sa'i sudah selesai tujuh kali sebelum mencukur</li>
+      <li><input type="checkbox" data-key="chk-pilih"> Sudah menentukan halq atau taqsir (laki-laki) / taqsir (perempuan)</li>
+      <li><input type="checkbox" data-key="chk-kanan"> Mendahulukan sisi kanan kepala</li>
+      <li><input type="checkbox" data-key="chk-merata"> Rambut dipotong merata di seluruh bagian kepala (bukan sebagian)</li>
+      <li><input type="checkbox" data-key="chk-doa"> Membaca / mendengarkan doa untuk yang bertahallul</li>
+      <li><input type="checkbox" data-key="chk-ganti"> Sudah boleh berganti pakaian biasa setelah tahallul selesai</li>
+    </ul>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> Tanya Jawab</h2>
+    <div id="faqTahallul">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Apakah rambut hasil cukuran wajib dikubur? <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="faq-a">Tidak wajib. Tidak ada dalil yang mewajibkan menguburnya. Boleh dibuang di tempat yang layak; sebagian jamaah memilih menguburnya semata sebagai bentuk kehati-hatian, bukan karena kewajiban syar'i.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Bolehkah perempuan ikut mencukur habis (halq) seperti laki-laki? <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="faq-a">Tidak disyariatkan, dan sebagian ulama menyatakan makruh, karena menyerupai penampilan yang bukan tuntunan bagi perempuan dalam manasik ini. Cukup taqsir sesuai hadits yang sudah disebutkan di atas.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Bagaimana jika rambut sangat pendek atau botak alami? <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="faq-a">Cukup menjalankan pisau cukur di kepala sebagai simbol halq, atau bagi yang benar-benar tidak memiliki rambut sama sekali, sebagian ulama menyatakan cukup menggerakkan alat cukur di kepala tanpa ada rambut yang terpotong, sebagai bentuk memenuhi rukun secara simbolis.</div>
+      </div>
+    </div>
+
+    <div class="divider-star"><svg class="rosette" viewBox="0 0 100 100"><g></g></svg></div>
+    <p style="text-align:center;color:var(--text-muted);font-size:.9rem;">Dengan selesainya tahallul, rangkaian ibadah umrah telah sempurna. Semoga menjadi umrah yang mabrur — <span class="mono">تَقَبَّلَ اللَّهُ مِنَّا وَمِنْكُمْ</span></p>
+  </div>
+`,
+
+'doa-doa': `
+  <div class="chapter-tools no-print">
+    <button class="tool-btn" id="bookmarkBtn" onclick="toggleBookmark('doa-doa')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      <span>Tandai Bab</span>
+    </button>
+    <button class="tool-btn" onclick="toggleNotesBox()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+      <span>Catatan Saya</span>
+    </button>
+  </div>
+
+  <div id="notesBox" style="display:none;margin-bottom:24px;">
+    <textarea class="notes-area" id="notesArea" placeholder="Tulis catatan pribadi untuk bab ini..."></textarea>
+    <div class="save-hint">Tersimpan otomatis di perangkat Anda.</div>
+  </div>
+
+  <div class="prose">
+    <p>Bab ini mengumpulkan doa dan sunnah harian yang menyertai perjalanan jamaah dari hotel ke Masjidil Haram dan sebaliknya, serta beberapa amalan sunnah seputar thawaf yang perlu penjelasan lebih rinci. Semua dalil di bawah ini dipilih dari riwayat yang shahih; bila suatu doa berstatus atsar (perkataan/amalan sahabat, bukan sabda Nabi ﷺ), hal itu disebutkan secara jujur agar tidak disalahpahami sebagai hadits Nabi.</p>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> 1. Berangkat Menuju Masjidil Haram</h2>
+    <p>Sebelum melangkah keluar dari hotel/pemondokan menuju Masjidil Haram, disunnahkan membaca doa keluar rumah yang berlaku umum bagi setiap muslim, sebagaimana diajarkan Rasulullah ﷺ.</p>
+    <div class="card card-doa">
+      <div class="arabic">بِسْمِ اللَّهِ تَوَكَّلْتُ عَلَى اللَّهِ لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ</div>
+      <div class="latin">Bismillahi tawakkaltu 'alallah, laa hawla wa laa quwwata illaa billaah</div>
+      <div class="artinya">Artinya: "Dengan nama Allah, aku bertawakal kepada Allah, tiada daya dan kekuatan kecuali dengan (pertolongan) Allah."</div>
+      <p class="save-hint" style="margin-top:10px;">HR. Abu Dawud No. 5095 & Tirmidzi No. 3426, dishahihkan oleh Syaikh Al-Albani. Dalam hadits yang sama disebutkan, orang yang membaca doa ini akan dikatakan kepadanya: "Engkau telah diberi petunjuk, dicukupkan, dan dijaga," lalu setan pun menjauh darinya.</p>
+    </div>
+    <p class="save-hint">Disunnahkan pula melangkah dengan kaki kanan terlebih dahulu ketika keluar dari pintu, sebagaimana kebiasaan Nabi ﷺ mendahulukan yang kanan dalam hal-hal yang baik.</p>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> Doa Masuk Masjidil Haram</h2>
+    <p>Doa berikut adalah doa masuk masjid yang berlaku umum di masjid mana pun, termasuk Masjidil Haram, dibaca sambil melangkahkan kaki kanan terlebih dahulu.</p>
+    <div class="card card-doa">
+      <div class="arabic">اللَّهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ</div>
+      <div class="latin">Allahummaftah lii abwaaba rahmatik</div>
+      <div class="artinya">Artinya: "Ya Allah, bukakanlah untukku pintu-pintu rahmat-Mu."</div>
+      <p class="save-hint" style="margin-top:10px;">HR. Muslim No. 713, dari hadits Abu Humaid atau Abu Usaid radhiyallahu 'anhuma.</p>
+    </div>
+    <p class="save-hint">Catatan penting: tidak ada doa khusus yang shahih dari Nabi ﷺ untuk dibaca saat pertama kali melihat Ka'bah. Sebagian bacaan yang beredar luas di masyarakat untuk momen ini sanadnya lemah, sehingga cukup memperbanyak doa bebas, dzikir, dan takbir dengan penuh kekhusyukan saat momen tersebut, tanpa mematok lafal tertentu sebagai sunnah.</p>
+
+    <div class="divider-star"><svg class="rosette" viewBox="0 0 100 100"><g></g></svg></div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> 2. Keluar Masjidil Haram Kembali ke Hotel</h2>
+    <p>Sama seperti masuk, doa keluar masjid berlaku umum dan dibaca sambil melangkahkan kaki kiri terlebih dahulu.</p>
+    <div class="card card-doa">
+      <div class="arabic">اللَّهُمَّ إِنِّي أَسْأَلُكَ مِنْ فَضْلِكَ</div>
+      <div class="latin">Allahumma inni as-aluka min fadhlik</div>
+      <div class="artinya">Artinya: "Ya Allah, sesungguhnya aku memohon karunia-Mu."</div>
+      <p class="save-hint" style="margin-top:10px;">HR. Muslim No. 713, satu hadits yang sama dengan doa masuk masjid di atas — Nabi ﷺ mengajarkan keduanya sekaligus: memohon rahmat saat masuk (karena masjid adalah tempat turunnya rahmat), dan memohon karunia saat keluar (karena akan kembali pada urusan dunia).</p>
+    </div>
+    <p class="save-hint">Doa yang sama ini berlaku setiap kali jamaah keluar dari Masjidil Haram menuju hotel, bukan hanya sekali di akhir rangkaian ibadah.</p>
+
+    <div class="divider-star"><svg class="rosette" viewBox="0 0 100 100"><g></g></svg></div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> 3. Shalat Dua Rakaat di Dekat Maqam Ibrahim</h2>
+    <p>Setelah thawaf selesai tujuh putaran, disunnahkan shalat dua rakaat di belakang Maqam Ibrahim — posisi Maqam Ibrahim berada di antara jamaah dan Ka'bah. Jika area tersebut padat, boleh dilakukan di titik mana pun di dalam Masjidil Haram.</p>
+    <div class="card card-dalil">
+      <span class="ref">QS. Al-Baqarah: 125</span>
+      <p style="margin:0;">"...Dan jadikanlah sebagian Maqam Ibrahim sebagai tempat shalat."</p>
+    </div>
+    <div class="card card-dalil">
+      <span class="ref">HR. Bukhari No. 1627 — dari Ibnu Umar</span>
+      <p style="margin:0;">Nabi ﷺ thawaf tujuh putaran mengelilingi Ka'bah, lalu shalat dua rakaat di belakang Maqam Ibrahim, kemudian keluar menuju Shafa.</p>
+    </div>
+    <p>Bacaan surat yang disunnahkan pada dua rakaat ini, setelah Al-Fatihah, adalah Al-Kafirun pada rakaat pertama dan Al-Ikhlas pada rakaat kedua (ada juga riwayat dengan urutan sebaliknya).</p>
+    <div class="card card-dalil">
+      <span class="ref">HR. Muslim No. 1218 — dari Jabir bin Abdillah, hadits panjang tentang haji Nabi ﷺ</span>
+      <p style="margin:0;">"Beliau menjadikan Maqam Ibrahim antara dirinya dengan Ka'bah, lalu shalat dua rakaat, membaca pada keduanya: 'Qul huwallahu ahad' dan 'Qul yaa ayyuhal kafirun'."</p>
+    </div>
+    <p class="save-hint">Membaca kedua surat ini hukumnya sunnah, bukan wajib — sah juga shalat dua rakaat ini dengan surat lain, hanya saja mengikuti bacaan Nabi ﷺ tentu lebih utama.</p>
+
+    <div class="divider-star"><svg class="rosette" viewBox="0 0 100 100"><g></g></svg></div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> 4. Doa dan Sunnah Minum Air Zamzam</h2>
+    <p>Setelah shalat dua rakaat di Maqam Ibrahim, jamaah menuju titik air zamzam untuk minum sebelum melanjutkan ke Sa'i.</p>
+    <h3>Sunnah cara minum</h3>
+    <ul>
+      <li>Menghadap kiblat jika memungkinkan.</li>
+      <li>Membaca <span class="mono">basmalah</span> sebelum minum, sesuai adab makan-minum pada umumnya.</li>
+      <li>Boleh minum sambil berdiri — ini bukan pengecualian yang aneh, karena secara khusus dicontohkan Nabi ﷺ untuk air zamzam.</li>
+      <li>Bernapas di luar wadah sebanyak tiga kali (tidak menenggak sekaligus dalam satu tarikan napas), sebagaimana kebiasaan Nabi ﷺ dalam minum pada umumnya.</li>
+      <li>Mengucap <span class="mono">hamdalah</span> setelah selesai minum.</li>
+    </ul>
+    <div class="card card-dalil">
+      <span class="ref">Muttafaq 'alaih (HR. Bukhari & Muslim No. 3779) — dari Ibnu Abbas</span>
+      <p style="margin:0;">"Aku memberi minum Rasulullah ﷺ dari air zamzam, lalu beliau meminumnya dalam keadaan berdiri."</p>
+    </div>
+
+    <h3>Doa saat minum zamzam</h3>
+    <div class="card card-doa">
+      <div class="arabic">اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا وَرِزْقًا وَاسِعًا وَشِفَاءً مِنْ كُلِّ دَاءٍ</div>
+      <div class="latin">Allahumma inni as-aluka 'ilman naafi'an, wa rizqan waasi'an, wa syifaa'an min kulli daa'in</div>
+      <div class="artinya">Artinya: "Ya Allah, aku memohon kepada-Mu ilmu yang bermanfaat, rezeki yang luas, dan kesembuhan dari segala penyakit."</div>
+      <p class="save-hint" style="margin-top:10px;">Ini adalah <b>atsar</b> (amalan) dari sahabat Ibnu Abbas radhiyallahu 'anhuma, diriwayatkan oleh Imam Ad-Daraquthni — bukan sabda langsung Nabi ﷺ, namun diamalkan secara luas oleh ulama karena kandungan maknanya yang baik dan datang dari sahabat yang mulia.</p>
+    </div>
+    <p>Adapun mengenai keutamaan air zamzam yang bermanfaat sesuai niat peminumnya:</p>
+    <div class="card card-dalil">
+      <span class="ref">HR. Ibnu Majah No. 3062, dinilai hasan oleh sebagian ulama hadits termasuk Al-Hakim</span>
+      <p style="margin:0;">"Air zamzam itu (bermanfaat) sesuai dengan niat orang yang meminumnya."</p>
+    </div>
+    <p class="save-hint">Karena itu, dianjurkan berniat kebaikan tertentu (kesembuhan, ilmu, kemudahan urusan) sebelum meminumnya, sebagaimana yang dahulu dilakukan para ulama salaf.</p>
+
+    <div class="divider-star"><svg class="rosette" viewBox="0 0 100 100"><g></g></svg></div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> 5 & 6. Doa di Bukit Shafa dan Bukit Marwah</h2>
+    <p>Doa ini sudah dijelaskan lengkap pada <b>Bab Sa'i</b>, dan disalin ulang di sini sebagai referensi cepat. Rangkaiannya sama persis dilakukan di Shafa maupun di Marwah, menghadap ke arah Ka'bah.</p>
+
+    <h3>Saat mendekati Shafa (dibaca satu kali, untuk memulai sa'i)</h3>
+    <div class="card card-doa">
+      <div class="arabic">إِنَّ الصَّفَا وَالْمَرْوَةَ مِنْ شَعَائِرِ اللَّهِ</div>
+      <div class="latin">Innash-Shafa wal-Marwata min sya'a-irillah</div>
+      <div class="artinya">Artinya: "Sesungguhnya Shafa dan Marwah adalah sebagian dari syiar-syiar Allah."</div>
+      <p class="save-hint" style="margin-top:10px;">HR. Muslim No. 1218 — Nabi ﷺ membaca ayat ini (QS. Al-Baqarah: 158) lalu bersabda, "Aku memulai dengan apa yang Allah mulai (yaitu Shafa)."</p>
+    </div>
+
+    <h3>Di atas Shafa maupun di atas Marwah (diulang 3x, diselingi doa bebas)</h3>
+    <div class="card card-doa">
+      <div class="arabic">اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ، أَنْجَزَ وَعْدَهُ، وَنَصَرَ عَبْدَهُ، وَهَزَمَ الْأَحْزَابَ وَحْدَهُ</div>
+      <div class="latin">Allahu akbar, Allahu akbar, Allahu akbar. Laa ilaaha illallaahu wahdahu laa syariika lah, lahul mulku wa lahul hamdu wa huwa 'ala kulli syai'in qadiir. Laa ilaaha illallaahu wahdah, anjaza wa'dah, wa nashara 'abdah, wa hazamal ahzaaba wahdah</div>
+      <div class="artinya">Artinya: "Allah Maha Besar (3x), tidak ada sesembahan yang berhak disembah kecuali Allah semata, tiada sekutu bagi-Nya, milik-Nya segala kerajaan dan pujian, dan Dia Maha Kuasa atas segala sesuatu. Tidak ada sesembahan yang berhak disembah kecuali Allah semata, Dia menepati janji-Nya, menolong hamba-Nya, dan mengalahkan pasukan sekutu sendirian."</div>
+      <p class="save-hint" style="margin-top:10px;">HR. Muslim No. 1218, hadits panjang Jabir bin Abdillah. Dilakukan sama persis di Marwah sebagaimana di Shafa, sebagaimana disebutkan dalam kelanjutan hadits yang sama.</p>
+    </div>
+    <p class="save-hint">Lihat pembahasan lengkap tata cara, harwalah, dan checklist Sa'i pada bab tersendiri di menu navigasi.</p>
+  </div>
+`,
+
+'doa-safar': `
+  <div class="chapter-tools no-print">
+    <button class="tool-btn" id="bookmarkBtn" onclick="toggleBookmark('doa-safar')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      <span>Tandai Bab</span>
+    </button>
+    <button class="tool-btn" onclick="toggleNotesBox()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+      <span>Catatan Saya</span>
+    </button>
+  </div>
+
+  <div id="notesBox" style="display:none;margin-bottom:24px;">
+    <textarea class="notes-area" id="notesArea" placeholder="Tulis catatan pribadi untuk bab ini..."></textarea>
+    <div class="save-hint">Tersimpan otomatis di perangkat Anda.</div>
+  </div>
+
+  <div class="prose">
+    <p>Perjalanan menuju Baitullah dimulai jauh sebelum tiba di Masjidil Haram — sejak melangkah dari rumah, naik kendaraan, berpisah dengan keluarga, hingga singgah di negeri asing. Bab ini mengumpulkan dzikir dan doa yang menyertai perjalanan tersebut, terpisah dari kumpulan doa manasik di bab sebelumnya, agar mudah dijadikan bekal khusus safar.</p>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> 1. Dzikir & Doa Naik Kendaraan</h2>
+    <p>Setelah duduk di atas kendaraan (mobil, bus, pesawat, atau kapal), disunnahkan bertakbir tiga kali, lalu membaca doa berikut.</p>
+    <div class="card card-doa">
+      <div class="arabic">اللهُ أَكْبَرُ، اللهُ أَكْبَرُ، اللهُ أَكْبَرُ. سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ، وَإِنَّا إِلَى رَبِّنَا لَمُنْقَلِبُونَ</div>
+      <div class="latin">Allahu akbar, Allahu akbar, Allahu akbar. Subhaanalladzii sakhkhara lanaa hadzaa wa maa kunnaa lahu muqriniin, wa innaa ilaa rabbinaa lamunqalibuun</div>
+      <div class="artinya">Artinya: "Allah Maha Besar (3x). Maha Suci Allah yang telah menundukkan kendaraan ini untuk kami, padahal sebelumnya kami tidak mampu menguasainya, dan sesungguhnya kami akan kembali kepada Rabb kami."</div>
+      <p class="save-hint" style="margin-top:10px;">HR. Muslim No. 1342, dari Ibnu Umar radhiyallahu 'anhuma — bacaan pertama mengutip QS. Az-Zukhruf: 13-14, dilanjutkan doa dari Nabi ﷺ sendiri.</p>
+    </div>
+
+    <div class="divider-star"><svg class="rosette" viewBox="0 0 100 100"><g></g></svg></div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> 2. Doa Akan Safar</h2>
+    <p>Bersambung dari doa naik kendaraan di atas, dalam hadits yang sama Nabi ﷺ melanjutkan dengan permohonan berikut — dibaca setelah bacaan takbir dan tasbih di atas, sekali di awal perjalanan.</p>
+    <div class="card card-doa">
+      <div class="arabic">اللَّهُمَّ إِنَّا نَسْأَلُكَ فِي سَفَرِنَا هَذَا الْبِرَّ وَالتَّقْوَى، وَمِنَ الْعَمَلِ مَا تَرْضَى، اللَّهُمَّ هَوِّنْ عَلَيْنَا سَفَرَنَا هَذَا وَاطْوِ عَنَّا بُعْدَهُ، اللَّهُمَّ أَنْتَ الصَّاحِبُ فِي السَّفَرِ وَالْخَلِيفَةُ فِي الْأَهْلِ</div>
+      <div class="latin">Allahumma innaa nas-aluka fii safarinaa haadzal-birra wat-taqwaa, wa minal-'amali maa tardhaa. Allahumma hawwin 'alainaa safaranaa haadzaa wathwi 'annaa bu'dah. Allahumma antash-shaahibu fis-safari wal-khaliifatu fil-ahli</div>
+      <div class="artinya">Artinya: "Ya Allah, kami memohon kepada-Mu dalam perjalanan kami ini kebajikan dan ketakwaan, dan amal yang Engkau ridhai. Ya Allah, mudahkanlah perjalanan kami ini dan dekatkanlah jaraknya bagi kami. Ya Allah, Engkaulah teman dalam perjalanan dan yang menjaga keluarga yang ditinggalkan."</div>
+      <p class="save-hint" style="margin-top:10px;">HR. Muslim No. 1342, satu rangkaian hadits yang sama dengan doa naik kendaraan.</p>
+    </div>
+    <p>Nabi ﷺ juga mengajarkan doa perlindungan dari kesulitan safar, dibaca pada kesempatan yang sama:</p>
+    <div class="card card-doa">
+      <div class="arabic">اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنْ وَعْثَاءِ السَّفَرِ، وَكَآبَةِ الْمَنْظَرِ، وَسُوءِ الْمُنْقَلَبِ فِي الْمَالِ وَالْأَهْلِ</div>
+      <div class="latin">Allahumma innii a'uudzu bika min wa'tsaa-is-safari, wa kaabatil-mandzari, wa suu-il-munqalabi fil-maali wal-ahli</div>
+      <div class="artinya">Artinya: "Ya Allah, aku berlindung kepada-Mu dari beratnya perjalanan, pemandangan yang menyedihkan, dan buruknya keadaan yang didapati pada harta dan keluarga (sekembalinya nanti)."</div>
+      <p class="save-hint" style="margin-top:10px;">HR. Muslim No. 1342.</p>
+    </div>
+
+    <div class="divider-star"><svg class="rosette" viewBox="0 0 100 100"><g></g></svg></div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> 3. Doa Ketika Singgah di Daerah/Negeri Asing</h2>
+    <p>Setiba di negeri asing — baik saat transit, tiba di Madinah/Makkah, maupun berpindah penginapan — disunnahkan membaca doa perlindungan berikut begitu singgah di suatu tempat.</p>
+    <div class="card card-doa">
+      <div class="arabic">أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ</div>
+      <div class="latin">A'uudzu bikalimaatillaahit-taammaati min syarri maa khalaq</div>
+      <div class="artinya">Artinya: "Aku berlindung dengan kalimat-kalimat Allah yang sempurna dari kejahatan makhluk yang Dia ciptakan."</div>
+      <p class="save-hint" style="margin-top:10px;">HR. Muslim No. 2708, dari Khaulah bintu Hakim as-Sulamiyyah radhiyallahu 'anha. Nabi ﷺ bersabda: "Barangsiapa singgah di suatu tempat lalu membaca doa ini, maka tidak ada sesuatu pun yang membahayakannya sampai ia beranjak dari tempat tersebut."</p>
+    </div>
+    <p class="save-hint">Doa ini berlaku umum untuk singgah di tempat mana pun yang belum dikenal — cocok dibaca begitu tiba di kamar hotel yang baru, atau saat transit di bandara/kota yang asing.</p>
+
+    <div class="divider-star"><svg class="rosette" viewBox="0 0 100 100"><g></g></svg></div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> 4. Doa Bagi yang Berangkat, untuk Keluarga yang Ditinggalkan</h2>
+    <p>Sebelum berangkat, disunnahkan mendoakan keluarga dan orang-orang yang ditinggalkan di rumah dengan doa berikut, mengikuti kebiasaan Nabi ﷺ saat berpisah dengan sahabatnya.</p>
+    <div class="card card-doa">
+      <div class="arabic">أَسْتَوْدِعُكُمُ اللَّهَ الَّذِي لَا تَضِيعُ وَدَائِعُهُ</div>
+      <div class="latin">Astaudi'ukumullaahalladzii laa tadhii'u wadaa-i'uh</div>
+      <div class="artinya">Artinya: "Aku menitipkan kalian kepada Allah, yang tidak akan pernah menyia-nyiakan titipan-Nya."</div>
+      <p class="save-hint" style="margin-top:10px;">HR. Ibnu Majah No. 2825 & Ahmad 2/358, dari Abu Hurairah radhiyallahu 'anhu — diucapkan Rasulullah ﷺ saat melepas kepergian seseorang. Dinilai shahih oleh Al-Hafizh Abu Thahir dan disepakati keabsahannya oleh Syaikh Al-Albani dalam Silsilah Ash-Shahihah.</p>
+    </div>
+
+    <div class="divider-star"><svg class="rosette" viewBox="0 0 100 100"><g></g></svg></div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> 5. Doa untuk yang Akan Safar (dari yang Ditinggalkan)</h2>
+    <p>Sebaliknya, keluarga atau kerabat yang mengantar/ditinggalkan disunnahkan mendoakan jamaah yang akan berangkat dengan doa berikut.</p>
+    <div class="card card-doa">
+      <div class="arabic">أَسْتَوْدِعُ اللَّهَ دِينَكَ وَأَمَانَتَكَ وَخَوَاتِيمَ عَمَلِكَ</div>
+      <div class="latin">Astaudi'ullaaha diinaka, wa amaanataka, wa khawaatiima 'amalik</div>
+      <div class="artinya">Artinya: "Aku menitipkan agamamu, amanahmu, dan penutup segala amalmu kepada Allah."</div>
+      <p class="save-hint" style="margin-top:10px;">HR. At-Tirmidzi No. 3443, dinilai hasan shahih oleh Syaikh Al-Albani.</p>
+    </div>
+    <div class="card card-doa">
+      <div class="arabic">زَوَّدَكَ اللَّهُ التَّقْوَى، وَغَفَرَ ذَنْبَكَ، وَيَسَّرَ لَكَ الْخَيْرَ حَيْثُ مَا كُنْتَ</div>
+      <div class="latin">Zawwadakallaahut-taqwaa, wa ghafara dzanbaka, wa yassara lakal-khaira haitsu maa kunta</div>
+      <div class="artinya">Artinya: "Semoga Allah membekalimu dengan ketakwaan, mengampuni dosamu, dan memudahkan kebaikan bagimu di mana pun engkau berada."</div>
+      <p class="save-hint" style="margin-top:10px;">HR. At-Tirmidzi No. 3444, dari Anas bin Malik radhiyallahu 'anhu, dinilai hasan.</p>
+    </div>
+
+    <div class="divider-star"><svg class="rosette" viewBox="0 0 100 100"><g></g></svg></div>
+
+    <h2><svg class="rosette" viewBox="0 0 100 100"><g></g></svg> 6. Dzikir Pagi dan Sore Sesuai Sunnah</h2>
+    <p>Selama perjalanan safar, dzikir pagi dan petang tetap dijaga sebagaimana biasa — bahkan lebih dianjurkan lagi karena berfungsi sebagai benteng diri selama berada jauh dari rumah. Berikut beberapa dzikir inti yang paling kuat dalilnya.</p>
+
+    <h3>Sayyidul Istighfar & dzikir penyerahan diri (pagi & sore)</h3>
+    <div class="card card-doa">
+      <div class="arabic">أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ</div>
+      <div class="latin">Ashbahnaa wa ashbahal-mulku lillaah, walhamdu lillaah, laa ilaaha illallaahu wahdahu laa syariika lah</div>
+      <div class="artinya">Artinya: "Kami memasuki waktu pagi, dan kerajaan hanya milik Allah, segala puji bagi Allah, tiada sesembahan yang berhak disembah kecuali Allah semata, tiada sekutu bagi-Nya." (Untuk sore, ganti "Ashbahnaa...ashbaha" dengan "Amsainaa...amsaa")</div>
+      <p class="save-hint" style="margin-top:10px;">HR. Muslim No. 2723, dari Abdullah bin Mas'ud radhiyallahu 'anhu.</p>
+    </div>
+
+    <h3>Doa penyerahan hidup dan mati</h3>
+    <div class="card card-doa">
+      <div class="arabic">اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ</div>
+      <div class="latin">Allahumma bika ashbahnaa, wa bika amsainaa, wa bika nahyaa, wa bika namuutu wa ilaikan-nusyuur</div>
+      <div class="artinya">Artinya: "Ya Allah, dengan (pertolongan)-Mu kami memasuki pagi, dengan-Mu kami memasuki sore, dengan-Mu kami hidup, dengan-Mu kami mati, dan kepada-Mu kebangkitan (di akhirat)."</div>
+      <p class="save-hint" style="margin-top:10px;">HR. At-Tirmidzi No. 3391 & Abu Dawud, dinilai hasan shahih oleh Syaikh Al-Albani.</p>
+    </div>
+
+    <h3>Doa keridhaan (dibaca 3x pagi, 3x sore)</h3>
+    <div class="card card-doa">
+      <div class="arabic">رَضِيتُ بِاللَّهِ رَبًّا، وَبِالْإِسْلَامِ دِينًا، وَبِمُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ نَبِيًّا</div>
+      <div class="latin">Radhiitu billaahi rabbaa, wa bil-islaami diinaa, wa bimuhammadin shallallaahu 'alaihi wasallam nabiyyaa</div>
+      <div class="artinya">Artinya: "Aku ridha Allah sebagai Rabb, Islam sebagai agama, dan Muhammad ﷺ sebagai Nabi."</div>
+      <p class="save-hint" style="margin-top:10px;">HR. Abu Dawud, At-Tirmidzi & Ahmad, dishahihkan oleh Syaikh Al-Albani.</p>
+    </div>
+
+    <h3>Doa kecukupan (dibaca 7x pagi, 7x sore)</h3>
+    <div class="card card-doa">
+      <div class="arabic">حَسْبِيَ اللَّهُ لَا إِلَهَ إِلَّا هُوَ، عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ</div>
+      <div class="latin">Hasbiyallaahu laa ilaaha illaa huwa, 'alaihi tawakkaltu wa huwa rabbul-'arsyil-'azhiim</div>
+      <div class="artinya">Artinya: "Cukuplah Allah bagiku, tiada sesembahan yang berhak disembah kecuali Dia. Hanya kepada-Nya aku bertawakal, dan Dia Rabb pemilik 'Arsy yang agung."</div>
+      <p class="save-hint" style="margin-top:10px;">HR. Abu Dawud No. 5081, dihasankan oleh Syaikh Al-Albani.</p>
+    </div>
+
+    <h3>Tiga surat perlindungan (dibaca 3x pagi, 3x sore)</h3>
+    <p class="save-hint">Al-Ikhlas, Al-Falaq, dan An-Naas — masing-masing dibaca tiga kali pada pagi dan petang. Dalil: HR. Abu Dawud No. 5082 & At-Tirmidzi No. 3575, dari Uqbah bin Amir radhiyallahu 'anhu, dinilai hasan shahih.</p>
+
+    <p class="save-hint">Dzikir "A'uudzu bikalimaatillaahit-taammaati min syarri maa khalaq" pada poin 3 di atas juga termasuk bagian dzikir petang berdasarkan HR. Muslim No. 2709 & Ahmad — dibaca 3 kali di sore hari, selain fungsinya sebagai doa singgah di tempat asing.</p>
+  </div>
+`
+};
+
+/* ============================================================
+   STORAGE HELPERS (window.storage — persisten per pengguna)
+   ============================================================ */
+async function saveData(key, value){
+  try{ await window.storage.set(key, JSON.stringify(value)); }catch(e){ console.error('storage set gagal', e); }
+}
+async function loadData(key){
+  try{
+    const r = await window.storage.get(key);
+    return r ? JSON.parse(r.value) : null;
+  }catch(e){ return null; }
+}
+
+/* ============================================================
+   THEME
+   ============================================================ */
+async function toggleTheme(){
+  const html = document.body;
+  const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  await saveData('theme-pref', next);
+}
+async function initTheme(){
+  const saved = await loadData('theme-pref');
+  if(saved) document.body.setAttribute('data-theme', saved);
+}
+
+/* ============================================================
+   NAV / SIDEBAR
+   ============================================================ */
+let currentChapter = 'niat-umrah';
+
+function renderSidebar(){
+  const groups = {};
+  CHAPTERS.forEach(c=>{ (groups[c.group] = groups[c.group]||[]).push(c); });
+  let html = '';
+  let n = 1;
+  Object.keys(groups).forEach(g=>{
+    html += `<div class="nav-group-label">${g}</div>`;
+    groups[g].forEach(c=>{
+      if(c.status === 'locked'){
+        html += `<div class="nav-locked">🔒 ${c.title} — segera hadir</div>`;
+      } else {
+        html += `<div class="nav-item" data-id="${c.id}" onclick="goToChapter('${c.id}')">
+          <span class="num mono">${String(n).padStart(2,'0')}</span>
+          <span>${c.title}</span>
+          <span class="bookmark-dot"></span>
+        </div>`;
+      }
+      n++;
+    });
+  });
+  document.getElementById('sidebar').innerHTML = html;
+}
+
+function goToChapter(id){
+  const chap = CHAPTERS.find(c=>c.id===id);
+  if(!chap || chap.status !== 'ready') return;
+  currentChapter = id;
+  renderChapter(chap);
+  document.querySelectorAll('.nav-item').forEach(el=>{
+    el.classList.toggle('active', el.dataset.id === id);
+  });
+  window.scrollTo({top:0, behavior:'smooth'});
+  closeNav();
+}
+
+function renderChapter(chap){
+  const body = CONTENT[chap.id] || `
+    <div class="placeholder-box">
+      <svg class="rosette" viewBox="0 0 100 100"><g></g></svg>
+      <p>Bab ini akan ditulis pada tahap berikutnya.</p>
+    </div>`;
+  document.getElementById('mainContent').innerHTML = `
+    <div class="chapter-eyebrow">${chap.eyebrow || ''}</div>
+    <h1 class="chapter-title">${chap.title}</h1>
+    <div class="chapter-sub">${chap.sub || ''}</div>
+    ${body}
+  `;
+  initChapterInteractivity(chap.id);
+}
+
+function openNav(){ document.getElementById('sidebar').classList.add('open'); document.getElementById('navScrim').classList.add('show'); }
+function closeNav(){ document.getElementById('sidebar').classList.remove('open'); document.getElementById('navScrim').classList.remove('show'); }
+
+/* ============================================================
+   BOOKMARK
+   ============================================================ */
+let bookmarks = [];
+async function loadBookmarks(){
+  bookmarks = (await loadData('bookmarks')) || [];
+  updateBookmarkUI();
+}
+async function toggleBookmark(id){
+  if(bookmarks.includes(id)){ bookmarks = bookmarks.filter(b=>b!==id); showToast('Tanda bab dihapus'); }
+  else { bookmarks.push(id); showToast('Bab ditandai'); }
+  await saveData('bookmarks', bookmarks);
+  updateBookmarkUI();
+}
+function updateBookmarkUI(){
+  document.querySelectorAll('.nav-item').forEach(el=>{
+    el.classList.toggle('bookmarked', bookmarks.includes(el.dataset.id));
+  });
+  const btn = document.getElementById('bookmarkBtn');
+  if(btn) btn.classList.toggle('active', bookmarks.includes(currentChapter));
+}
+
+/* ============================================================
+   NOTES (per bab)
+   ============================================================ */
+function toggleNotesBox(){
+  const box = document.getElementById('notesBox');
+  if(!box) return;
+  box.style.display = box.style.display === 'none' ? 'block' : 'none';
+}
+async function initNotes(chapId){
+  const area = document.getElementById('notesArea');
+  if(!area) return;
+  const saved = await loadData('notes-'+chapId);
+  area.value = saved || '';
+  let t;
+  area.addEventListener('input', ()=>{
+    clearTimeout(t);
+    t = setTimeout(async ()=>{ await saveData('notes-'+chapId, area.value); showToast('Catatan tersimpan'); }, 700);
+  });
+}
+
+/* ============================================================
+   CHECKLIST (persist per item)
+   ============================================================ */
+async function initChecklist(chapId){
+  document.querySelectorAll('.checklist input[type=checkbox]').forEach(async (cb)=>{
+    const storeKey = 'chk-'+chapId+'-'+cb.dataset.key;
+    const saved = await loadData(storeKey);
+    cb.checked = !!saved;
+    cb.addEventListener('change', async ()=>{ await saveData(storeKey, cb.checked); });
+  });
+}
+
+/* ============================================================
+   FAQ TOGGLE
+   ============================================================ */
+function toggleFaq(el){
+  el.parentElement.classList.toggle('open');
+}
+
+/* ============================================================
+   SEARCH — sederhana, menelusuri teks tiap bab yang sudah ready
+   ============================================================ */
+function buildSearchIndex(){
+  const idx = [];
+  CHAPTERS.filter(c=>c.status==='ready').forEach(c=>{
+    const tmp = document.createElement('div');
+    tmp.innerHTML = CONTENT[c.id];
+    const text = tmp.textContent.replace(/\s+/g,' ');
+    // pecah per heading h2 agar hasil pencarian lebih presisi
+    const sections = CONTENT[c.id].split(/<h2/).slice(1);
+    sections.forEach(sec=>{
+      const t2 = document.createElement('div');
+      t2.innerHTML = '<h2'+sec;
+      const heading = (t2.querySelector('h2')?.textContent || c.title).trim();
+      const body = t2.textContent.replace(/\s+/g,' ').slice(0,160);
+      idx.push({chapId:c.id, chapTitle:c.title, heading, body});
+    });
+    idx.push({chapId:c.id, chapTitle:c.title, heading:c.title, body:text.slice(0,160)});
+  });
+  return idx;
+}
+let SEARCH_INDEX = [];
+
+function runSearch(q){
+  const box = document.getElementById('searchResults');
+  q = q.trim().toLowerCase();
+  if(q.length < 2){ box.classList.remove('show'); box.innerHTML=''; return; }
+  const matches = SEARCH_INDEX.filter(it =>
+    it.heading.toLowerCase().includes(q) || it.body.toLowerCase().includes(q)
+  ).slice(0,8);
+  if(matches.length === 0){
+    box.innerHTML = `<div class="res-item">Tidak ditemukan hasil untuk "${q}"</div>`;
+  } else {
+    box.innerHTML = matches.map(m=>`
+      <div class="res-item" onclick="goToChapter('${m.chapId}'); document.getElementById('searchResults').classList.remove('show'); document.getElementById('searchInput').value='';">
+        <b>${m.heading}</b>
+        <span class="path">${m.chapTitle}</span>
+      </div>
+    `).join('');
+  }
+  box.classList.add('show');
+}
+
+/* ============================================================
+   READING PROGRESS BAR
+   ============================================================ */
+function updateProgressBar(){
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = docHeight > 0 ? (scrollTop/docHeight)*100 : 0;
+  document.getElementById('progressBar').style.width = pct + '%';
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+let toastTimer;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 1800);
+}
+
+/* ============================================================
+   ROSETTE SVG — motif bintang 8 geometris, dipakai berulang
+   ============================================================ */
+function drawRosette(g){
+  const cx=50, cy=50, r=38;
+  let path = '';
+  for(let i=0;i<8;i++){
+    const a1 = (Math.PI/4)*i;
+    const a2 = a1 + Math.PI/4;
+    const x1 = cx + r*Math.cos(a1), y1 = cy + r*Math.sin(a1);
+    const x2 = cx + r*Math.cos(a2), y2 = cy + r*Math.sin(a2);
+    path += `M ${cx} ${cy} L ${x1.toFixed(1)} ${y1.toFixed(1)} `;
+  }
+  const pts = [];
+  for(let i=0;i<8;i++){
+    const a = (Math.PI/4)*i - Math.PI/8;
+    pts.push([cx + r*0.9*Math.cos(a), cy + r*0.9*Math.sin(a)]);
+  }
+  let star = 'M ' + pts.map(p=>p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' L ') + ' Z';
+  g.innerHTML = `<circle cx="50" cy="50" r="38" /><path d="${star}" />`;
+}
+function initAllRosettes(){
+  document.querySelectorAll('.rosette g').forEach(drawRosette);
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+function initChapterInteractivity(chapId){
+  initNotes(chapId);
+  initChecklist(chapId);
+  updateBookmarkUI();
+  initAllRosettes();
+}
+
+async function init(){
+  await initTheme();
+  renderSidebar();
+  await loadBookmarks();
+  const first = CHAPTERS.find(c=>c.id===currentChapter);
+  renderChapter(first);
+  document.querySelectorAll('.nav-item').forEach(el=>{
+    el.classList.toggle('active', el.dataset.id === currentChapter);
+  });
+  SEARCH_INDEX = buildSearchIndex();
+  initAllRosettes();
+
+  document.getElementById('searchInput').addEventListener('input', e=>runSearch(e.target.value));
+  document.addEventListener('click', (e)=>{
+    if(!e.target.closest('.search-wrap')) document.getElementById('searchResults').classList.remove('show');
+  });
+  window.addEventListener('scroll', updateProgressBar);
+}
+init();
+</script>
+</body>
+</html>
